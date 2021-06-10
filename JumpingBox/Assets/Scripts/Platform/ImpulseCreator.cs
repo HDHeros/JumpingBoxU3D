@@ -2,16 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Platform : MonoBehaviour
+public class ImpulseCreator : MonoBehaviour
 {
     [SerializeField] private float _bounceForce; //сила отскока куба от платформы
 
-    public void OnCollisionEnter2D(Collision2D objectCollission)
-    { 
+    public void OnCollisionEnter(Collision objectCollission)
+    {
         if (objectCollission.gameObject.GetComponent<MainCube>())
         {
-            Rigidbody2D rigidbody = objectCollission.gameObject.GetComponent<Rigidbody2D>();
-            rigidbody.AddForce(Vector2.up * _bounceForce, ForceMode2D.Impulse);
+
+            Rigidbody rigidbody = objectCollission.gameObject.GetComponent<Rigidbody>();
+            rigidbody.AddForce(Vector2.up * _bounceForce, ForceMode.Impulse);
         }
     }
 }

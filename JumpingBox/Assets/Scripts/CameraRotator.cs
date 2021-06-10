@@ -1,15 +1,38 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Events;
 
 public class CameraRotator : MonoBehaviour
 {
-    [SerializeField] private Vector3 _point;
+    [SerializeField] private Vector3 _point;//точка, вокруг которой вращается камера
     [SerializeField] private float _rotationSpeed;
+    [SerializeField] private bool _isActive = true;//предохраняет от вращений во время вращения
+
+    public UnityEvent OnCameraRotated;//вызывается, когда камера завершила вращение
+    public bool IsActive
+    {
+        get { return _isActive; }
+        set { _isActive = _angleForRotate == 0 ? value : _isActive; }
+    }
+    public float AngleForRotate
+    {
+        get { return _angleForRotate; }
+        set {
+            if(IsActive)
+            {
+                _angleForRotate = value;
+                _isActive = false;
+            }
+        }
+    }
+    public bool CameraTurnToX
+    {
+        get { return _cameraTurnToX; }
+    }
 
 
+    private bool _cameraTurnToX = false;
     private float _angleForRotate;
     private float _currentRotateProgress;//текущий прогресс поворота
     private Transform _transform;
@@ -21,24 +44,25 @@ public class CameraRotator : MonoBehaviour
         _transform = GetComponent<Transform>();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
-        if(_angleForRotate != 0)
+        if (_angleForRotate == 0) return;
+
+        _transform.RotateAround(_point, Vector3.up, _angleForRotate * _rotationSpeed);
+        _currentRotateProgress += _rotationSpeed;
+
+        if (Math.Round((decimal)_currentRotateProgress, 1) == 1 - (decimal)_rotationSpeed)//если до окончания поворота осталось меньше двух проходов
         {
-            _transform.RotateAround(_point, Vector3.up, _angleForRotate * _rotationSpeed);
-            _currentRotateProgress += _rotationSpeed;
+            float remainingAngle = _angleForRotate < 0 ? 0 : Math.Abs(_angleForRotate);//высчитываем угол, на который осталось довернуть
+            remainingAngle -= transform.rotation.eulerAngles.y % Math.Abs(_angleForRotate);
+            _transform.RotateAround(_point, Vector3.up, remainingAngle);//доворачиваем
+            _currentRotateProgress = 0;//обнуляем прогресс и угол поворота
+            _angleForRotate = 0;
+            _isActive = true;
+            _cameraTurnToX = !_cameraTurnToX;
+            OnCameraRotated.Invoke();
 
-            if (Math.Round((decimal)_currentRotateProgress, 1) == 1 - (decimal)_rotationSpeed)
-            {
-
-                float remainingAngle = _angleForRotate < 0 ? 0 : 90;
-                remainingAngle -= transform.rotation.eulerAngles.y % 90;
-                _transform.RotateAround(_point, Vector3.up, remainingAngle);
-                _currentRotateProgress = 0;
-                _angleForRotate = 0;
-               
-                // ПОСЛЕ ПОВОРОТА ГУЛЯЕТ ПОЗИЦИЯ, ИСПРАВИТЬ
-            }
+                // TODO: ПОСЛЕ ПОВОРОТА ГУЛЯЕТ ПОЗИЦИЯ, ИСПРАВИТЬ
         }
 
     }
@@ -47,7 +71,7 @@ public class CameraRotator : MonoBehaviour
     {
         if(Math.Abs(eventData.delta.x) > Math.Abs(eventData.delta.y)) //если свайп горизонтальный - действуем, веритакальные не интересуют
         {
-            _angleForRotate += eventData.delta.x > 0 ? 90f : -90f;
+            AngleForRotate = eventData.delta.x > 0 ? 90f : -90f;
         }
     }
 }
