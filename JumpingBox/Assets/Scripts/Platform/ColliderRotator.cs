@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 
 /// <summary>
@@ -9,6 +10,8 @@ using UnityEngine;
 /// </summary>
 public class ColliderRotator : MonoBehaviour
 {
+    public UnityEvent OnColliderSizeChanged;
+
     private GameObject _camera;
     private BoxCollider _collider;
 
@@ -20,10 +23,16 @@ public class ColliderRotator : MonoBehaviour
         ChangePlatformCollider();
     }
     
-    private void OnDisable()
+    private void OnDestroy()
     {
-        _camera.GetComponent<CameraRotator>().OnCameraRotated.RemoveListener(OnCameraRotated);
+        try
+        {
+            _camera.GetComponent<CameraRotator>().OnCameraRotated.RemoveListener(OnCameraRotated);
+        }
+        catch
+        {
 
+        }
     }
 
     public void OnCameraRotated()
@@ -41,6 +50,6 @@ public class ColliderRotator : MonoBehaviour
         {
             _collider.size = new Vector3(1f, 1f, 10f);
         }
-
+        OnColliderSizeChanged.Invoke();
     }
 }

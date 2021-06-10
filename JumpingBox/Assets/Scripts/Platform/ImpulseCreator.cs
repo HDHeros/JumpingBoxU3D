@@ -10,7 +10,6 @@ public class ImpulseCreator : MonoBehaviour
     {
         if (objectCollission.gameObject.GetComponent<MainCube>())
         {
-
             Rigidbody rigidbody = objectCollission.gameObject.GetComponent<Rigidbody>();
             rigidbody.AddForce(Vector2.up * _bounceForce, ForceMode.Impulse);
         }
