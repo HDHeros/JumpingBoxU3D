@@ -14,12 +14,14 @@ public class ColliderRotator : MonoBehaviour
 
     private GameObject _camera;
     private BoxCollider _collider;
+    private Transform _transform;
 
     private void Start()
     {
         _collider = GetComponent<BoxCollider>();
         _camera = GameObject.FindGameObjectWithTag("MainCamera");
         _camera.GetComponent<CameraRotator>().OnCameraRotated.AddListener(OnCameraRotated);
+        _transform = GetComponent<Transform>();
         ChangePlatformCollider();
     }
     
@@ -44,11 +46,11 @@ public class ColliderRotator : MonoBehaviour
     {
         if (_camera.GetComponent<CameraRotator>().CameraTurnToX)
         {
-            _collider.size = new Vector3(10f, 1f, 1f);
+            _collider.size = _transform.rotation.y == 0 ? new Vector3(10f, 1f, 1f) : new Vector3(1f, 1f, 10f);
         }
         else
         {
-            _collider.size = new Vector3(1f, 1f, 10f);
+            _collider.size = _transform.rotation.y == 0 ? new Vector3(1f, 1f, 10f) : new Vector3(10f, 1f, 1f);
         }
         OnColliderSizeChanged.Invoke();
     }

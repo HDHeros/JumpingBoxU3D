@@ -8,6 +8,8 @@ public class CameraRotator : MonoBehaviour
     [SerializeField] private Vector3 _point;//точка, вокруг которой вращается камера
     [SerializeField] private float _rotationSpeed;
     [SerializeField] private bool _isActive = true;//предохраняет от вращений во время вращения
+    
+    private GameState _gameState;
 
     public UnityEvent OnCameraRotated;//вызывается, когда камера завершила вращение
     public bool IsActive
@@ -19,7 +21,7 @@ public class CameraRotator : MonoBehaviour
     {
         get { return _angleForRotate; }
         set {
-            if(IsActive)
+            if(IsActive && _gameState.State == GameStates.GameIsOn)
             {
                 _angleForRotate = value;
                 _isActive = false;
@@ -40,8 +42,9 @@ public class CameraRotator : MonoBehaviour
 
     private void Start()
     {
-        _rotationSpeed = _rotationSpeed == 0 ? 0.5f : Math.Abs(_rotationSpeed % 1);
+        _rotationSpeed = _rotationSpeed == 0 ? 0.1f : Math.Abs(_rotationSpeed % 1);
         _transform = GetComponent<Transform>();
+        _gameState = GetComponent<GameState>();
     }
 
     private void FixedUpdate()
@@ -71,7 +74,16 @@ public class CameraRotator : MonoBehaviour
     {
         if(Math.Abs(eventData.delta.x) > Math.Abs(eventData.delta.y)) //если свайп горизонтальный - действуем, веритакальные не интересуют
         {
-            AngleForRotate = eventData.delta.x > 0 ? 90f : -90f;
+            //if (_cameraTurnToX)
+            //{
+            //    AngleForRotate = eventData.delta.x > 0 ? 0f : -90f;
+            //}
+            //else
+            //{
+            //    AngleForRotate = eventData.delta.x > 0 ? 90f : 0f;
+            //}
+            AngleForRotate = _cameraTurnToX ? -90f : 90f;
+
         }
     }
 }

@@ -1,18 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 
 public class MainCube : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private ScoreCounter _scoreCounter;
+    void OnBecameInvisible()
     {
-        
-    }
+        try
+        {
+            if (GetComponent<Transform>().position.y < GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Transform>().position.y)
+            {
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            }
+        }
+        catch
+        {
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        }
+
     }
 }
+
+
+

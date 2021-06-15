@@ -6,6 +6,7 @@ public class ImpulseCreator : MonoBehaviour
 {
     [SerializeField] private float _bounceForce; //сила отскока куба от платформы
 
+
     public void OnCollisionEnter(Collision objectCollission)
     {
         if (objectCollission.gameObject.GetComponent<MainCube>())
@@ -14,4 +15,6 @@ public class ImpulseCreator : MonoBehaviour
             rigidbody.AddForce(Vector2.up * _bounceForce, ForceMode.Impulse);
         }
     }
+
+
 }

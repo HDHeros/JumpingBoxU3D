@@ -6,6 +6,15 @@ public class PlatformDestroyer : MonoBehaviour
 {
     void OnBecameInvisible()
     {
-        Destroy(gameObject);
+        try
+        {
+            if (GetComponent<Transform>().position.y < GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Transform>().position.y)
+                Destroy(gameObject);
+        }
+        catch
+        {
+
+        }
+
     }
 }
