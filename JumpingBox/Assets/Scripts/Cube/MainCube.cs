@@ -1,17 +1,27 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine.SceneManagement;
+﻿using UnityEngine.SceneManagement;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class MainCube : MonoBehaviour
 {
-    [SerializeField] private ScoreCounter _scoreCounter;
-    void OnBecameInvisible()
+    public UnityEvent CubeBecameInvisible;
+
+    private Transform _camera;
+
+    private void Start()
+    {
+        _camera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Transform>();
+    }
+
+    private void OnBecameInvisible()
     {
         try
         {
-            if (GetComponent<Transform>().position.y < GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Transform>().position.y)
+            float cubePositionY = GetComponent<Transform>().position.y;
+            float cameraPositionY = _camera.position.y;
+            if (cubePositionY < cameraPositionY)
             {
+                CubeBecameInvisible.Invoke();
                 SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             }
         }
@@ -19,7 +29,6 @@ public class MainCube : MonoBehaviour
         {
 
         }
-
     }
 }
 

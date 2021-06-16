@@ -1,10 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
+/// <summary>
+/// Устанавливает не активную в данный момент ось в значение платформы, которой коснулся куб
+/// </summary>
 public class SecondaryAxisCorrector : MonoBehaviour
 {
     [SerializeField] private CameraRotator _cameraRotator;
+
     private Transform _transform;
 
     private void Start()
@@ -14,14 +16,13 @@ public class SecondaryAxisCorrector : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag != "Platform") return;
-        if(_cameraRotator.CameraTurnToX)
-        {
-            _transform.position = new Vector3(collision.transform.position.x, _transform.position.y, _transform.position.z);
-        }
-        else
-        {
-            _transform.position = new Vector3(_transform.position.x, _transform.position.y, collision.transform.position.z);
-        }
+
+        float positionX = _cameraRotator.CameraIsTurnToX ? collision.transform.position.x : _transform.position.x;
+        float positionY = _transform.position.y;
+        float positionZ = _cameraRotator.CameraIsTurnToX ? _transform.position.z : collision.transform.position.z;
+
+        _transform.position = new Vector3(positionX, positionY, positionZ);
+
 
     }
 }

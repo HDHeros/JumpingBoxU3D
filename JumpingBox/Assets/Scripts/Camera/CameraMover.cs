@@ -1,34 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CameraMover : MonoBehaviour
 {
-    [SerializeField] private float _startSpeed;
+    [SerializeField] private bool _isActive = false;
+    [SerializeField] private float _startLiftingSpeed;
     [SerializeField] private ScoreCounter _scoreCouner;
     [SerializeField] private Transform _mainCubeTransform;
     [SerializeField] private GameState _gameState;
-    [SerializeField] private bool _isActive = false;
 
-    private float _speed;
-    private Transform _transform;
-
-    private void Start()
-    {
-        _transform = GetComponent<Transform>();
-        _startSpeed = _startSpeed == 0 ? 0.01f : _startSpeed;
-        _speed = _startSpeed;
-        _scoreCouner.OnScoreChanged.AddListener(OnScoreChanged);
-        _gameState = GetComponent<GameState>();
-        _gameState.OnGameStateChanged.AddListener(OnGameStateChanged);
-        OnGameStateChanged();
-    }
-
-    private void Update()
-    {
-        if (!_isActive) return;
-        CameraMove();
-    }
+    private float _liftingSpeed;
+    private Transform _cameraTransform;
 
     private void OnGameStateChanged()
     {
@@ -42,18 +23,33 @@ public class CameraMover : MonoBehaviour
         }
     }
 
-    private void CameraMove()
-    {
-        if(_mainCubeTransform.position.y > _transform.position.y + 2)
-            _transform.Translate(Vector3.up * _speed * 4);
-
-        _transform.Translate(Vector3.up * _speed);
-
-    }
-
     public void OnScoreChanged(int _score)
     {
-        _speed = _startSpeed + (float)_score / 10000;
+        _liftingSpeed = _startLiftingSpeed + (float)_score / 10000;
+    }
+
+    private void Start()
+    {
+        _cameraTransform = GetComponent<Transform>();
+        _startLiftingSpeed = _startLiftingSpeed == 0 ? 0.01f : _startLiftingSpeed;
+        _liftingSpeed = _startLiftingSpeed;
+        _scoreCouner.ScoreChanged.AddListener(OnScoreChanged);
+        _gameState = GetComponent<GameState>();
+        _gameState.OnGameStateChanged.AddListener(OnGameStateChanged);
+    }
+
+    private void CameraMove()
+    {
+        if (_mainCubeTransform.position.y > _cameraTransform.position.y + 2)
+            _cameraTransform.Translate(Vector3.up * _liftingSpeed * 4);
+
+        _cameraTransform.Translate(Vector3.up * _liftingSpeed);
+    }
+
+    private void Update()
+    {
+        if (!_isActive) return;
+        CameraMove();
     }
 
 }

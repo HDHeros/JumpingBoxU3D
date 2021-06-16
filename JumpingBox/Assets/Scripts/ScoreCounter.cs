@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine.UI;
+﻿using UnityEngine.UI;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -9,23 +7,33 @@ public class ScoreChangedEvent : UnityEvent<int> { }
 
 public class ScoreCounter : MonoBehaviour
 {
-    public ScoreChangedEvent OnScoreChanged;
+    public ScoreChangedEvent ScoreChanged;
 
     private GameObject _mainCube;
-    private Text _text;
-
+    private Text _labelText;
     private int _score;
+
+    private void CheckBestScore()
+    {
+        if (PlayerPrefs.GetInt("BestScore") < _score)
+            PlayerPrefs.SetInt("BestScore", _score);
+    }
+
+    public void OnCubeBecameInvisible()
+    {
+        CheckBestScore();
+    }
 
     private void Start()
     {
         _mainCube = GameObject.FindGameObjectWithTag("Player");
-        _text = GetComponent<Text>();
-        _score = 0;
+        _mainCube.GetComponent<MainCube>().CubeBecameInvisible.AddListener(OnCubeBecameInvisible);
+        _labelText = GetComponent<Text>();
+
         if (!PlayerPrefs.HasKey("BestScore"))
             PlayerPrefs.SetInt("BestScore", 0);
 
-        _text.text = "Best score: " + PlayerPrefs.GetInt("BestScore").ToString();
-
+        _labelText.text = "Best score: " + PlayerPrefs.GetInt("BestScore").ToString();
     }
 
     private void Update()
@@ -33,10 +41,10 @@ public class ScoreCounter : MonoBehaviour
         if((int)_mainCube.transform.position.y > _score)
         {
             _score = (int)_mainCube.transform.position.y;
-            _text.text = _score.ToString();
-            if (PlayerPrefs.GetInt("BestScore") < _score)
-                PlayerPrefs.SetInt("BestScore", _score);
-            OnScoreChanged.Invoke(_score);
+            _labelText.text = _score.ToString();
+            ScoreChanged.Invoke(_score);
         }
     }
+
+
 }

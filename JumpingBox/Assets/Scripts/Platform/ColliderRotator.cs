@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 
 
@@ -10,41 +7,15 @@ using UnityEngine.Events;
 /// </summary>
 public class ColliderRotator : MonoBehaviour
 {
-    public UnityEvent OnColliderSizeChanged;
+    public UnityEvent ColliderSizeChanged;
 
     private GameObject _camera;
     private BoxCollider _collider;
     private Transform _transform;
 
-    private void Start()
+    private void ChangePlatformCollider(bool cameraIsTurnToX)
     {
-        _collider = GetComponent<BoxCollider>();
-        _camera = GameObject.FindGameObjectWithTag("MainCamera");
-        _camera.GetComponent<CameraRotator>().OnCameraRotated.AddListener(OnCameraRotated);
-        _transform = GetComponent<Transform>();
-        ChangePlatformCollider();
-    }
-    
-    private void OnDestroy()
-    {
-        try
-        {
-            _camera.GetComponent<CameraRotator>().OnCameraRotated.RemoveListener(OnCameraRotated);
-        }
-        catch
-        {
-
-        }
-    }
-
-    public void OnCameraRotated()
-    {
-        ChangePlatformCollider();
-    }
-
-    private void ChangePlatformCollider()
-    {
-        if (_camera.GetComponent<CameraRotator>().CameraTurnToX)
+        if (cameraIsTurnToX)
         {
             _collider.size = _transform.rotation.y == 0 ? new Vector3(10f, 1f, 1f) : new Vector3(1f, 1f, 10f);
         }
@@ -52,6 +23,29 @@ public class ColliderRotator : MonoBehaviour
         {
             _collider.size = _transform.rotation.y == 0 ? new Vector3(1f, 1f, 10f) : new Vector3(10f, 1f, 1f);
         }
-        OnColliderSizeChanged.Invoke();
+        ColliderSizeChanged.Invoke();
     }
+
+
+    private void Start()
+    {
+        _collider = GetComponent<BoxCollider>();
+        _camera = GameObject.FindGameObjectWithTag("MainCamera");
+        _camera.GetComponent<CameraRotator>().CameraCompletedRotate.AddListener(ChangePlatformCollider);
+        _transform = GetComponent<Transform>();
+        ChangePlatformCollider(false);
+    }
+    
+    private void OnDestroy()
+    {
+        try
+        {
+            _camera.GetComponent<CameraRotator>().CameraCompletedRotate.RemoveListener(ChangePlatformCollider);
+        }
+        catch
+        {
+
+        }
+    }
+
 }

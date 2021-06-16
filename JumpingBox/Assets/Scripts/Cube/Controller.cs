@@ -1,12 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Controller : MonoBehaviour
 {
     [SerializeField] private float _speed;
 
-    private Transform _transform;
     private Rigidbody _rigidbody;
     private CameraRotator _cameraRotator;
 
@@ -14,22 +11,15 @@ public class Controller : MonoBehaviour
     private void Start()
     {
         _cameraRotator = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraRotator>();
-       // _camerRotator.OnCameraRotated.AddListener(OnCameraRotated);
-
-        _transform = GetComponent<Transform>();
         _rigidbody = GetComponent<Rigidbody>();
         _speed = _speed == 0 ? 10 : _speed;
-    }
-
-    private void Update()
-    {
-        SetHorizontalSpeed();
     }
 
     private void SetHorizontalSpeed()
     {
         float direction = _speed;
-        bool cameraDirectionIsX = _cameraRotator.CameraTurnToX;
+        bool cameraDirectionIsX = _cameraRotator.CameraIsTurnToX;
+        if (Mathf.Abs(_rigidbody.velocity.y) < 0.2f) return;
 
         if (Application.platform == RuntimePlatform.Android)
         {
@@ -42,4 +32,10 @@ public class Controller : MonoBehaviour
         _rigidbody.velocity = new Vector3(cameraDirectionIsX ? 0 : direction, _rigidbody.velocity.y, cameraDirectionIsX ? -direction : 0);
 
     }
+
+    private void Update()
+    {
+        SetHorizontalSpeed();
+    }
+
 }

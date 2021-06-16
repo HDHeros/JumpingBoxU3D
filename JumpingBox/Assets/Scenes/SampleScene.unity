@@ -214,7 +214,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0e0f9d9c0982c842a49c68fc942ca43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnScoreChanged:
+  ScoreChanged:
     m_PersistentCalls:
       m_Calls: []
 --- !u!1 &127444018
@@ -778,10 +778,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac9faf02001175d42997f28cd2376591, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _point: {x: 0, y: 0, z: 0}
+  _pivotPoint: {x: 0, y: 0, z: 0}
   _rotationSpeed: 0.1
-  _isActive: 1
-  OnCameraRotated:
+  CameraCompletedRotate:
     m_PersistentCalls:
       m_Calls: []
 --- !u!114 &963194230
@@ -796,11 +795,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa635a4b8328beb4fa6d59244aa1ca8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _startSpeed: 0
+  _isActive: 0
+  _startLiftingSpeed: 0
   _scoreCouner: {fileID: 2678217}
   _mainCubeTransform: {fileID: 1450786281}
   _gameState: {fileID: 963194231}
-  _isActive: 0
 --- !u!114 &963194231
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -813,7 +812,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 232b743673d3ccc4f9abe6b113c0cae1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gameState: 0
+  _state: 0
   OnGameStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1007,6 +1006,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3243521a001d41b44a0e307ef149a721, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isActive: 0
+  _period: 2
+  _cameraRotator: {fileID: 963194229}
+  _gameState: {fileID: 963194231}
   _platformsTypes:
   - _gameObject: {fileID: 5080719186553107028, guid: bddee4a4cb851d248b228fde14865bef,
       type: 3}
@@ -1017,10 +1020,6 @@ MonoBehaviour:
   - _gameObject: {fileID: 2201719242692268220, guid: 323bde3629f876b439644913694b8840,
       type: 3}
     _probability: 5
-  _period: 2
-  _cameraRotator: {fileID: 963194229}
-  _gameState: {fileID: 963194231}
-  _isActive: 0
 --- !u!1 &1360421455
 GameObject:
   m_ObjectHideFlags: 0
@@ -1135,7 +1134,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4cd054a21a0f0d4aa372c47c7f70419, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _scoreCounter: {fileID: 2678217}
+  CubeBecameInvisible:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!23 &1450786279
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1237,7 +1238,7 @@ GameObject:
   - component: {fileID: 1536068701}
   m_Layer: 5
   m_Name: Panel
-  m_TagString: Untagged
+  m_TagString: SwipeListner
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1273,7 +1274,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3965dd945ba6914498791aaafbb5883e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameCamera: {fileID: 963194227}
+  SwipeScreen:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &1536068702
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1346,7 +1349,7 @@ PrefabInstance:
     - target: {fileID: 5080719186553107034, guid: bddee4a4cb851d248b228fde14865bef,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -4.68
+      value: -4.5
       objectReference: {fileID: 0}
     - target: {fileID: 5080719186553107034, guid: bddee4a4cb851d248b228fde14865bef,
         type: 3}
