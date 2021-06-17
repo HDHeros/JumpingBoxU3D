@@ -2,7 +2,7 @@
 
 public class CameraMover : MonoBehaviour
 {
-    [SerializeField] private bool _isActive = false;
+    [SerializeField] private bool _followMode = false;
     [SerializeField] private float _startLiftingSpeed;
     [SerializeField] private ScoreCounter _scoreCouner;
     [SerializeField] private Transform _mainCubeTransform;
@@ -15,11 +15,11 @@ public class CameraMover : MonoBehaviour
     {
         if (_gameState.State == GameStates.GameIsOn)
         {
-            _isActive = true;
+            _followMode = true;
         }
         else
         {
-            _isActive = false;
+            _followMode = false;
         }
     }
 
@@ -38,17 +38,23 @@ public class CameraMover : MonoBehaviour
         _gameState.OnGameStateChanged.AddListener(OnGameStateChanged);
     }
 
-    private void CameraMove()
+    private void FollowToPlayer()
     {
         if (_mainCubeTransform.position.y > _cameraTransform.position.y + 2)
             _cameraTransform.Translate(Vector3.up * _liftingSpeed * 4);
+    }
 
-        _cameraTransform.Translate(Vector3.up * _liftingSpeed);
+    private void CameraMove()
+    {
+        FollowToPlayer();
+        
+        if(!_followMode)
+            _cameraTransform.Translate(Vector3.up * _liftingSpeed);
     }
 
     private void Update()
     {
-        if (!_isActive) return;
+        if (!_followMode) return;
         CameraMove();
     }
 

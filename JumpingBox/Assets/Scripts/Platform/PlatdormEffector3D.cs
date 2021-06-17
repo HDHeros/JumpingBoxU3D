@@ -18,7 +18,9 @@ public class PlatdormEffector3D : MonoBehaviour
         float triggerVelocityY = trigger.attachedRigidbody.velocity.y;
         float triggerPositionY = trigger.GetComponent<Transform>().position.y;
         if (triggerVelocityY < 0 && triggerPositionY > _transform.position.y)//если объект движется вниз отключаем триггер
+        {
             _boxCollider.isTrigger = false;
+        }
     }
 
     public void OnCollisionExit(Collision collis)

@@ -20,7 +20,9 @@ public class PlatformSpawner : MonoBehaviour
     private Transform _transform;
     private Transform _lastPlatformTransform;
     private GameObject _lastPlatformGameObject;
+    private List<string> _lastPlatformsName;//хранит имена последних _numberOfStored платформ
 
+    const int _numberOfStored = 5;
 
 
     private Quaternion GetPlatformRotation()
@@ -57,9 +59,31 @@ public class PlatformSpawner : MonoBehaviour
 
     }
 
+    private void SetLastPlatform(GameObject lastPlatform)
+    {
+        _lastPlatformGameObject = lastPlatform;
+        _lastPlatformTransform = lastPlatform.GetComponent<Transform>();
+        _lastPlatformsName.Insert(0, _lastPlatformGameObject.name);
+
+        if (_lastPlatformsName.Count > _numberOfStored)
+            _lastPlatformsName.RemoveAt(_numberOfStored);
+    }
+
     private GameObject GetPlatformType()
     {
-        return GetRandomPlatformType();
+        GameObject newPlatform = GetRandomPlatformType();
+
+        if (newPlatform.name != "Platform")
+            foreach (string platform in _lastPlatformsName)
+            {
+                if(platform == newPlatform.name)
+                {
+                    newPlatform = _platformsTypes[0]._gameObject;
+                } 
+            }
+
+        SetLastPlatform(newPlatform);
+        return newPlatform;
     }
 
     private float GetPseudoRandomAxis(float _lastPosition)
@@ -111,6 +135,8 @@ public class PlatformSpawner : MonoBehaviour
         _lastPlatformTransform = _transform;
         _lastPlatformGameObject = gameObject;
         _gameState.OnGameStateChanged.AddListener(OnGameStateChanged);
+        _lastPlatformsName = new List<string>();
+        _lastPlatformsName.Capacity = 5;
         OnGameStateChanged();
     }
     private void Update()

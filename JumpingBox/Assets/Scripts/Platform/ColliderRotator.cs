@@ -9,7 +9,7 @@ public class ColliderRotator : MonoBehaviour
 {
     public UnityEvent ColliderSizeChanged;
 
-    private GameObject _camera;
+    private CameraRotator _cameraRotator;
     private BoxCollider _collider;
     private Transform _transform;
 
@@ -30,17 +30,17 @@ public class ColliderRotator : MonoBehaviour
     private void Start()
     {
         _collider = GetComponent<BoxCollider>();
-        _camera = GameObject.FindGameObjectWithTag("MainCamera");
-        _camera.GetComponent<CameraRotator>().CameraCompletedRotate.AddListener(ChangePlatformCollider);
+        _cameraRotator = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraRotator>(); ;
+        _cameraRotator.CameraCompletedRotate.AddListener(ChangePlatformCollider);
         _transform = GetComponent<Transform>();
-        ChangePlatformCollider(false);
+        ChangePlatformCollider(_cameraRotator.CameraIsTurnToX);
     }
     
     private void OnDestroy()
     {
         try
         {
-            _camera.GetComponent<CameraRotator>().CameraCompletedRotate.RemoveListener(ChangePlatformCollider);
+            _cameraRotator.GetComponent<CameraRotator>().CameraCompletedRotate.RemoveListener(ChangePlatformCollider);
         }
         catch
         {
