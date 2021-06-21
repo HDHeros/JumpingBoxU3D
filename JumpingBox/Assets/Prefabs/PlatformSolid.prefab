@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 3684569793178778213}
   - component: {fileID: 3684569793178778212}
   - component: {fileID: 8018370716054440114}
+  - component: {fileID: -8667389377819455289}
   m_Layer: 0
   m_Name: PlatformSolid
   m_TagString: Untagged
@@ -108,7 +109,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f1b11ec26f7ab04ca4b9b94c6cabda2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnColliderSizeChanged:
+  ColliderSizeChanged:
     m_PersistentCalls:
       m_Calls: []
 --- !u!114 &3684569793178778212
@@ -134,5 +135,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 50aa41b809c7d9d4a8ad4229582eb608, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-8667389377819455289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3684569793178778222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f09c42b1084d4b48bf078995ca92a7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
